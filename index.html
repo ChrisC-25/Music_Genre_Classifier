@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team 53 ML Project</title>
+    <style>
+        body {
+            /* Gradient background */
+            background: radial-gradient(circle, #AECFEE, #C694E9);
+            /* For full-page height */
+            min-height: 100vh;
+        }
+
+        /* Additional styling for content */
+        .content {
+            text-align: center;
+            color: white;
+            font-size: 24px;
+        }
+    </style>
+</head>
+<body>
+    <section>
+        <h2>Introduction/Background</h2>
+        <ul>
+            Applying machine learning models to music can provide very interesting and useful outcomes (T.-T Dang and K. Shirai), which we aim to discover. 
+            We found a very popular dataset that has been used in over 100 research papers and contains data on over 100,000 songs. There are over 150 genres of music covered, and almost 1 terabyte worth of audio data. Additionally, there are many different datasets we can download for both training and running our model.  <a href="https://github.com/mdeff/fma"> Link to Dataset</a>
+        </ul>
+        
+    </section>
+
+    <section>
+        <h2>Problem/Motivation</h2>
+        <ul>
+           One problem that we have is that users struggle to add new songs to correct playlists and find music matching their tastes and moods.
+            Solving these problems will lead to a much more seamless and enjoyable experience listening to music.
+
+            
+        </ul>
+    </section>
+</body>
+<body>
+    <body>
+        <section>
+            <h2>Early Implementation</h2>
+            <ul>
+                Due to the audio-based nature of the data, our early work was first understanding what exactly was in the data.
+                There was obvious metadata like the title or artist, but most of the features were based on the actual audio waves. We had to 
+                understand what these signal processing terms meant and understand how they were calculated from the audio files in order to 
+                evaluate the usefulness of each feature. Overall we determined that we would start by focusing on the audio based features, we felt
+                that using most of the metadata features would not translate well to new data in future testing.
+            </ul>
+            
+        </section>
+
+        <section>
+            <h2>Final Implementation</h2>
+            <ul>
+                Contrary to what was done in the midterm, for our final analysis we decided to extract the audio data straight from the sources rather than use the given features.csv file. This provided us more control over our data, including obtaining individual records of the data, allowing us to correlate and map certain values to their respective genres, and allowing us to perform our custom modifications to the original data. We utilized the Librosa library for audio data retrieval and obtained vital data which became the feature set that our models were trained on. These features include Chroma Short-Time Fourier Transform (chroma_stft), Spectral Centroid (spec_cent), Spectral Bandwidth (spec_bw), Spectral Rolloff, Tempo, Root Mean Square (rms), Spectral Contrast (spec_cont), Spectral Flatness (spec_flat), Tonnetz, and Mel-Frequency Cepstral Coefficients (mfcc).     
+            </ul>
+            
+        </section>
+    
+        <section>
+            <h2>Feature Selection</h2>
+            <ul>
+                <li>Mel-Frequency Cepstral Coefficients (MFCCs)
+                    <ul>
+                        <li>Used in audio signal processing tasks including speech and music analysis</li>
+                        <li>Represent the short-term power spectrum of a sound on a nonlinear mel scale of frequency</li>
+                    </ul>
+                </li>
+                <li>Spectral Centroids
+                    <ul>
+                        <li>Represents the "center of mass" of the spectrum</li>
+                        <li>Provides information about the brightness or timbral characteristics of the audio signal</li>
+                    </ul>
+                </li>
+                <li>Spectral Bandwidth
+                    <ul>
+                        <li>Characterizes the spread of frequencies in the spectrum </li>
+                        <li>Can provide information about the complexity or richness of the sound</li>
+                        <li>Can be indicative of the instrumentation and texture of the audio, which can vary across different music genres</li>
+                    </ul>
+                </li>
+                <li>Chroma Short-Time Fourier Transform 
+                    <ul>
+                        <li>Condenses audio signals into 12 pitch classes, simplifying complex frequency data into a musically meaningful format</li>
+                        <li>Thisrepresentation captures genre-specific tonal patterns effectively, facilitating accurate genre prediction</li>
+                    </ul>
+                </li>
+                <li>Tempo
+                    <ul>
+                        <li>Represents the underlying beat or rhythmic structure of the audio signal and is often indicative of the genre or style of music</li>
+                    </ul>
+                </li>
+                <li>Spectral Rolloff
+                    <ul>
+                        <li>Measures the frequency below which a certain percentage of the total spectral energy lies, indicating the upper limit of the signal's harmonic content</li>
+                        <li>Can help differentiate music genres by capturing genre-specific spectral characteristics, contributing to more accurate genre prediction</li>
+                    </ul>
+                </li>
+                <li>Root Mean Square
+                    <ul>
+                        <li>Calculates the average magnitude of an audio signal, representing its overall energy content</li>
+                        <li>Provides valuable information about the loudness and intensity of the signal, aiding in genre prediction by capturing dynamic range and intensity variations characteristic of different music genres</li>
+                    </ul>
+                </li>
+                <li>Spectral Contrast
+                    <ul>
+                        <li>Measures the difference in magnitude between peaks and valleys in the frequency spectrum of an audio signal, reflecting its spectral texture</li>
+                        <li>Helps distinguish between music genres by capturing spectral characteristics such as brightness and complexity, enhancing genre prediction accuracy</li>
+                    </ul>
+                </li>
+                <li>Spectral Flatness
+                    <ul>
+                        <li>Quantifies the degree of flatness or peakedness of the frequency spectrum of an audio signal, indicating its tonal richness</li>
+                        <li>Aids in genre prediction by capturing the timbral characteristics of the signal, helping differentiate between genres with varying levels of harmonic complexity</li>
+                    </ul>
+                </li>
+                <li>Tonnetz
+                    <ul>
+                        <li>Represents the harmonic relationships between pitches in an audio signal using a geometric framework</li>
+                        <li>Captures the harmonic structure of music, aiding in genre prediction by highlighting tonal patterns and chord progressions characteristic of different genres</li>
+                    </ul>
+                </li>
+                
+            </ul>
+        </section>
+    
+        <section>
+            <h2>Data Preprocessing Models</h2>
+            <ul>
+                <li>Data Cleaning
+                    <ul>
+                        <b>Old Method</b>: Fortunately, our data is very well maintained and little additional cleaning was needed. One form of cleaning we tried, however,
+                        was to 'mean' repeated features. The audio data was broken down into not only the audio features listed above but also into various statistical properties about them.
+                        This means that for any feature, like the Spectral centroid, there was a 'min' feature, a 'max' feature, a 'mean' feature, etc.
+                        Not only were they separated by some features, like MFCC, had up to 40 features for a given statistic. We took the mean of each statistic of each feature (77 features when reduced)
+                        and it is shown later how this impacted our model.
+                    </ul>
+                    <ul>
+                        <b>New Method</b>: The first thing that we did was download over 8000 30-second audio clips, and perform a librosa analysis on each of them, providing over 30 features-worth of data per file. From here, multiple data entries were unusable as their genres were not predictable, or stored. We deleted around 1500 data entries due to this, to not negatively affect our predictions. Next, there were multiple niche and misworded genres, which we wrote Python scripts to omit and fix respectively. The final 15 genres we chose to analyze were Electronic, Pop, Latin, Hip-Hop, Folk, Reggae, Lo-fi, Instrumental, Soundtrack, Experimental, World, Latin, Rap, and ElectroHouse. After our selection, we were left with around 3300 data entries. 
+                    </ul>
+                </li>
+                
+                <li>Principal Component Analysis (PCA)
+                    <ul>
+                        We used standard PCA for our data, cleaned and raw and compared it to our model run without PCA.
+                        We used PCA up to features that maintained nearly 100% of the variance. In general, it seemed that the mean, median, and skew of
+                        each feature set was the most important feature in terms of variance.
+                    </ul>
+                </li>
+                
+            </ul>
+        </section>
+    
+        <section>
+            <h2>ML Algorithms/Methods</h2>
+            
+            <ul>
+                <li>
+                    For all of the models, we performed an f1 score. The numbers on the left-most side represent the genres, labeled 0-14. They represent Electronic, Pop, Experimental, Industrial, World, Latin, Hip-Hop, Rap, Electrohouse, Folk, Reggae, Lo-fi, Instrumental, and Soundtrack respectively.
+                </li>
+                <li> Neural Networks (supervised)
+                    <ul>
+                        We then implemented a Neural Network and evaluated the performance with our testing subset. 
+                        While better than Naive Bayes, we felt that we could do better. Below is the f1 score calculation.
+
+                        <img src="./Images/nn_f1_score.png" style="padding: 20px;" alt="acc_graph"><br>
+                    </ul>
+                </li>
+                <li> Convolutional Neural Network (supervised)
+                    <ul>
+                        A CNN model seemed to fit the data very well. We were able to consistently get the high
+                        performance from a CNN. Below is our f1 score calculation.
+
+                        <img src="./Images/cnn_f1_score.png" style="padding: 20px;" alt="acc_graph"><br>
+                    </ul>
+                </li>
+                <li> Random Forest (supervised)
+                    <ul>
+                        The Random Forest has very high accuracy as well and seems to fit the data well, as seen from the f1 scores below.
+
+                        <img src="./Images/rf_f1_score.png" style="padding: 20px;" alt="acc_graph"><br>
+                    </ul>
+                </li>
+            </ul>
+        </section>
+        
+        <section>
+            <h1>Results & Discussion</h1>
+            <ul> 
+                <li>
+                From our test data we see that Convolutional Neural Networks yields higher accuracies than the standard Neural Network. Such factors that could have affected the 
+                outcome is temporal relationships and feature extraction. Traditional NNs might fail to capture the temporal dependencies of music effectively and may also suffer when trying to discriminate features based on relevance.
+                the convolutions allow the model to investigate the impact of subsets of features which greatly helps to deal with spatial and temporal patterns relevant to music. CNNs also have translation invariance which stops small differences in music confusw the model on its genre. These capabilities would allow CNN to be more accurate than the standard NN.
+                </li>
+                
+                <li>Random forest was also very accurate. It is likely well equipped to deal with a large number of features selecting the most important ones. It is also robust to noisy data and irrelevant feature by being able to filter it out. Random forests also employ an 
+                ensemble learning method which means that they combine the predictions of multiple individual decision trees to make a final prediction. This would allow for more more robust and stable predictions when it comes to music, as the general consensus among multiple people is what decides a genre.
+                Random forests also have less hyperparameters/structure to tinker with and optimize so it was the easiest to get to work with the data.
+                </li>
+                
+                <li>Gaps in the confusion matrices are caused by the random sampling nature of our testing data. 'Soundtrack' is relatively tiny genre within the data so it is unlikely to be sampled in the 10% of data used for testing.</li>
+
+                <li>The critical point for epochs seems to be around 100. The NN models started to severly overfit around 85 epochs while CNN stopped noticeable increasing accuracy around 100.</li>
+
+                <li>Data augmentation or more tuning of hyperparameters/network structure can be done to optimize performce of our models</li>
+
+                <li>Random Forests seem to be innately better suited for audio data but a CNN can be more finely tuned to outperform a random forest. They were however very close in performance, but CNNs are not as consistent.</li>
+            </ul>
+        </section>
+        
+         <section>
+            <h2>References</h2>
+            <ul>
+                <li>[1]M. Defferrard, K. Benzi, P. Vandergheynst, and X. Bresson, “FMA: A Dataset For Music Analysis,” arXiv:1612.01840 [cs], Sep. 2017, Available: <a href="https://arxiv.org/abs/1612.01840">https://arxiv.org/abs/1612.01840</a>
+                </li>
+            </ul>
+        </section>
+        
+        <section>
+            <h1>Visualizations</h1>
+            
+            <div class="center">
+                <img src="./Images/Figure_1.png" style="padding: 20px;" alt="acc_graph"><br>
+                <strong>Figure 1.1: NN + CNN Model Loss and Accuracy Comparison graph</strong>
+                
+            </div>
+            <div class="center" style="padding: 20px;">
+                <img src="./Images/run1_nn_conf.png" alt="NN_conf">   
+                <strong>Figure 2.1: NN Confusion Matrix</strong>
+                
+            </div>
+        
+            <div class="center">
+                <img src="./Images/run1_cnn_conf.png" style="padding: 20px;" alt="cnn_conf">
+                <strong>Figure 2.2: CNN Confusion Matrix</strong>
+                
+            </div>
+
+            <div class="center">
+                <img src="./Images/run1_rf_conf.png" style="padding: 20px;" alt="rf_conf">
+                <strong>Figure 2.3: RF Confusion Matrix</strong>
+                
+            </div>
+            
+            <div class="center" style="padding: 20px;">
+                <img src="./Images/metrics.png" alt="metrics"><br>
+                <strong>Figure 3: Accuracy comparison between the 3 trained models after 5 runs.</strong>
+            </div>
+                                  
+        </section>
+        
+        <section>
+            <h2>Gantt Chart</h2>
+            <img src="gantt_chart_p3.png" alt="Gantt Chart">
+            <h2>Contribution Table</h2>
+            <img src="contribution_table_p3.png" alt="Contribution Table">
+        </section>
+        <style>
+            .center {
+              text-align: center;
+            }
+            .center img {
+              display: inline-block;
+            }
+          </style>
+</body>
+</html>
